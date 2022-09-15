@@ -8,7 +8,7 @@ import locale
 locale.setlocale( locale.LC_ALL, '' )
 
 from .models import DatosISR, Costo, TablaVacaciones, Perfil, Status, Uniformes, DatosBancarios, Bonos, Vacaciones, Economicos, Puesto, Empleados_Batch
-from .models import Status_Batch, Empresa, Distrito, Nivel, Contrato, Sangre, Sexo, Civil, UserDatos, Catorcenas, Uniforme, Tallas, Ropa
+from .models import Status_Batch, Empresa, Distrito, Nivel, Contrato, Sangre, Sexo, Civil, UserDatos, Catorcenas, Uniforme, Tallas, Ropa, SubProyecto
 import csv
 import json
 #from django.contrib.auth.decorators import login_required
@@ -192,6 +192,7 @@ def Perfil_vista(request): # Ya esta
 def FormularioPerfil(request):
     user_filter = UserDatos.objects.get(user=request.user)
     empleado,created=Perfil.objects.get_or_create(complete=False)
+    subproyectos = SubProyecto.objects.all()
 
     if user_filter.distrito.distrito == 'Matriz':
         form = PerfilForm()
@@ -222,7 +223,7 @@ def FormularioPerfil(request):
 
     context = {
         'form':form,
-        #'empleados':empleados
+        'subproyectos':subproyectos
         }
 
     return render(request, 'proyecto/PerfilForm.html',context)

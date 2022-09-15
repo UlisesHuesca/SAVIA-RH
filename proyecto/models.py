@@ -46,6 +46,7 @@ class Proyecto(models.Model):
     def __str__(self):
         return f'{self.proyecto}'
 class SubProyecto(models.Model):
+    proyecto = models.ForeignKey(Proyecto, on_delete = models.CASCADE, null=True)
     subproyecto = models.CharField(max_length=50,null=True)
     complete = models.BooleanField(default=False)
     def __str__(self):
@@ -268,18 +269,19 @@ class Catorcenas(models.Model):
     class Meta:
         unique_together = ('catorcena', 'fecha_inicial',)
 
-class Tallas(models.Model):
-    talla = models.CharField(max_length=50,null=True)
-    complete = models.BooleanField(default=False)
-    def __str__(self):
-        return f'{self.talla}'
-
 class Ropa(models.Model):
     ropa = models.CharField(max_length=50,null=True)
     complete = models.BooleanField(default=False)
     seleccionado = models.BooleanField(default=False)
     def __str__(self):
         return f'{self.ropa}'
+
+class Tallas(models.Model):
+    ropa = models.ForeignKey(Ropa, on_delete = models.CASCADE, null=True)
+    talla = models.CharField(max_length=50,null=True)
+    complete = models.BooleanField(default=False)
+    def __str__(self):
+        return f'Ropa: {self.ropa}, Talla: {self.talla}'
 
 class Uniformes(models.Model):
     status = models.ForeignKey(Status, on_delete = models.CASCADE, null=True)

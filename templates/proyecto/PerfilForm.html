@@ -40,7 +40,7 @@
                         <!-- El action y el multipart es para permitir cargar imagenes -->
                 <form method='POST' action='{{ action_url }}' enctype='multipart/form-data'>
                     {% csrf_token %}
-                            <div class="row my-2">
+                            <div class="row my-2" id='OrderForm' data-subproyecto-url="{% url 'ajax_load_subproyectos' %}" novalidate>
                                 <label for="form.foto" class="col-auto col-form-label my-1"><strong>Foto:</strong></label>
                                 <div class="col-4">
                                     {{form.foto|add_class:"form-control"}}
@@ -88,8 +88,8 @@
                                     {% render_field form.fecha_nacimiento type="date" class="form-control" %}
                                 </div>
                             </div>
-                            <div class="row my-2">
-                                <div class="col-2">
+                            <div class="row my-3">
+                                <div class="col-3">
                                     <label for="form.correo_electronico" class="col-auto col-form-label my-1"><strong>Correo electrónico:</strong></label>
                                 </div>
                                 <div class="col-3">
@@ -102,13 +102,26 @@
                             <div class="row my-2">
                                 <label for="form.proyecto" class="col-auto col-form-label my-1"><strong>Proyecto:</strong></label>
                                 <div class="col-3">
-                                    {{form.proyecto|add_class:"form-control"}}
+                                    {{form.proyecto|add_class:"form-select"}}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="selector input-group mb-3">
+                                    <label for="form.subproyecto" class="col-auto col-form-label my-1"><strong>Subproyecto: </strong></label>
+                                    <select class="form-select form-select-sm" style="font-size:1rem" id="subproyecto">
+                                    <option id="default_sel">--------</option>
+                                    {% for subproyecto in subproyectos %}
+                                    <option class="js" proyecto="{{subproyecto.proyecto.id}}">
+                                    {{subproyecto.subproyecto}}
+                                    </option>
+                                    {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                             <div class="row my-2">
-                                <label for="form.subproyecto" class="col-auto col-form-label my-1"><strong>Subproyecto:</strong></label>
-                                <div class="col-3">
-                                    {{form.subproyecto|add_class:"form-control"}}
+
+                                <div class="col-3 d-none">
+                                    {{form.subproyecto|add_class:"form-select"}}
                                 </div>
                             </div>
                             <hr>
@@ -121,4 +134,26 @@
             </div>
         </div>
     </div>
+    <script>
+    document.getElementById("id_proyecto").addEventListener("change", function(element){
+    var select = document.getElementById('id_proyecto');
+    var current_option = select.options[select.selectedIndex].value;
+    opciones = document.getElementsByClassName("js")
+    for (var i=0; i < opciones.length; i++){
+
+        if (opciones[i].getAttribute('proyecto') != current_option){
+             opciones[i].setAttribute('class','js d-none')
+        } else {
+            opciones[i].setAttribute('class','js')
+        }
+    }
+    });
+
+    document.getElementById("subproyecto").addEventListener("change", function(element){
+        var select = document.getElementById('subproyecto');
+        var current_option = select.options[select.selectedIndex].value;
+        var other_selector = document.getElementById('id_subproyecto');
+        other_selector.selectedIndex = select.selectedIndex
+    });
+    </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from proyecto.models import Perfil, Status, Costo, DatosBancarios, Bonos, Uniformes, Vacaciones, Economicos, DatosISR, TablaVacaciones, Empleados_Batch, Catorcenas
+from proyecto.models import Perfil, Status, Costo, DatosBancarios, Bonos, Uniformes, Vacaciones, Economicos, DatosISR, TablaVacaciones, Empleados_Batch, Catorcenas, Proyecto, SubProyecto
 from proyecto.models import Status_Batch, Uniforme
 class PerfilForm(forms.ModelForm):
     class Meta:
@@ -18,6 +18,22 @@ class PerfilUpdateForm(forms.ModelForm):
         model = Perfil
         fields = ['foto','empresa','distrito','nombres',
                 'apellidos','fecha_nacimiento','correo_electronico','proyecto','subproyecto',]
+
+    #Sobreescribiendo el método __init__ y configurando el queryset para que esté vacío
+    def __init__(self, *args, **kwargs):
+        distrito = kwargs.pop('distrito')
+        super().__init__(*args, **kwargs)
+        self.fields['subproyecto'].queryset = SubProyecto.objects.none()
+        self.fields['proyecto'].queryset = Proyecto.objects.filter(distrito=distrito)
+
+        if 'proyecto' in self.data:
+            try:
+                proyecto_id = int(self.data.get('proyecto'))
+                self.fields['subproyecto'].queryset = SubProyecto.objects.filter(proyecto_id=proyecto_id).order_by('nombre')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty subproyecto queryset
+        #elif self.instance.pk:
+        #    self.fields['subproyecto'].queryset = self.instance.proyecto.subproyecto_set.order_by('nombre')
 
 class StatusForm(forms.ModelForm):
     class Meta:

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'simple_history',
     'django_filters',
     "django_htmx",
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

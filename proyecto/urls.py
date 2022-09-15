@@ -65,5 +65,6 @@ urlpatterns = [
     path('Tabla_Economicos', views.Tabla_Economicos, name='Tabla_economicos'),
 
     path('Economicos/update/<int:pk>/', views.EconomicosUpdate, name='Economicos_update'),
+    path('ajax/load-subproyectos/', views.load_subproyectos, name='ajax_load_subproyectos'),  # <-- rutina en Ajax
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
